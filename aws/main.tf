@@ -105,6 +105,13 @@ resource "aws_lambda_function" "api_handler" {
       QUEUE_URL = aws_sqs_queue.job_queue.url
     }
   }
+
+  lifecycle {
+    action_trigger {
+      events  = [after_create, after_update]
+      actions = [action.aws_lambda_invoke.api_handler]
+    }
+  }
 }
 
 resource "aws_lambda_permission" "allow_http_api" {

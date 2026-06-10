@@ -11,14 +11,14 @@ def handler(event, context):
     payload = json.loads(event.get("body", "{}")) or event
 
     message = payload.get("message", "default message")
-    event_type = payload.get("type", "default")
+    event_type = payload.get("type", "DEFAULT")
 
     sqs.send_message(
       QueueUrl = QUEUE_URL,
       MessageAttributes = {
         "event_type": {
             "DataType":    "String",
-            "StringValue": event_type        
+            "StringValue": event_type
         }
       },
       MessageBody = message
