@@ -99,7 +99,7 @@ resource "aws_lambda_function" "api_handler" {
   s3_bucket = aws_s3_bucket.lambda_bucket.id
   s3_key    = aws_s3_object.lambda_object.key
   source_code_hash = data.archive_file.lambda_archive.output_base64sha256
-  
+
   environment {
     variables = {
       QUEUE_URL = aws_sqs_queue.job_queue.url
@@ -141,5 +141,15 @@ module "http_api" {
         timeout_milliseconds   = 10000
       }
     }
+  }
+}
+
+action "aws_lambda_invoke" "api_handler" {
+  config {
+    function_name = aws_lambda_function.api_handler.function_name
+    payload = jsonencode({
+      message = "Invoke lambda from action",
+      type    = "test"
+    })
   }
 }
